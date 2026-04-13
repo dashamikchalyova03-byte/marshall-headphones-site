@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marshall — Легендарный Звук</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dark: #8B6914;
+    --black: #0A0A0A;
+    --black-2: #111111;
+    --black-3: #1A1A1A;
+    --white: #FFFFFF;
+    --white-dim: rgba(255,255,255,0.08);
+    --white-mid: rgba(255,255,255,0.55);
+    --border: rgba(201,168,76,0.2);
+    --glow: rgba(201,168,76,0.25);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--black);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 3rem;
+    background: rgba(10,10,10,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-size: 1.5rem; font-weight: 700; letter-spacing: 0.3em;
+    color: var(--gold); text-transform: uppercase; font-family: sans-serif;
+  }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    color: var(--white-mid); text-decoration: none;
+    font-family: sans-serif; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 8rem 2rem 4rem;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.07) 0%, transparent 70%),
+                linear-gradient(180deg, #0A0A0A 0%, #111111 100%);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A84C' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.5;
+  }
+
+  .hero-eyebrow {
+    font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.5rem; opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+  .hero h1 {
+    font-size: clamp(3rem, 8vw, 7rem); font-weight: 400; letter-spacing: -0.02em;
+    line-height: 1.05; color: var(--white);
+    opacity: 0; animation: fadeUp 0.9s 0.4s forwards;
+  }
+  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero-sub {
+    max-width: 560px; margin: 1.5rem auto 0;
+    font-size: 1.1rem; line-height: 1.7; color: var(--white-mid);
+    opacity: 0; animation: fadeUp 0.9s 0.6s forwards;
+    font-family: sans-serif; font-weight: 300;
+  }
+  .hero-cta {
+    margin-top: 3rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.9s 0.8s forwards;
+  }
+  .btn-primary {
+    padding: 1rem 2.5rem; background: var(--gold);
+    color: var(--black); border: none; cursor: pointer;
+    font-family: sans-serif; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600;
+    transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.5s;
+  }
+  .btn-primary:hover::before { left: 100%; }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.4); }
+
+  .btn-secondary {
+    padding: 1rem 2.5rem; background: transparent;
+    color: var(--white); border: 1px solid rgba(255,255,255,0.25); cursor: pointer;
+    font-family: sans-serif; font-size: 0.85rem; letter-spacing: 0.2em; text-transform: uppercase;
+    transition: all 0.3s;
+  }
+  .btn-secondary:hover { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+
+  /* HEADPHONE VISUAL */
+  .hero-product {
+    margin-top: 4rem; position: relative; width: 100%; max-width: 600px;
+    opacity: 0; animation: fadeUp 1s 1s forwards;
+  }
+  .product-glow {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 400px; height: 300px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .headphone-svg { width: 100%; max-width: 500px; filter: drop-shadow(0 0 40px rgba(201,168,76,0.3)); }
+
+  /* FEATURES */
+  .features {
+    padding: 6rem 2rem;
+    background: var(--black-2);
+    position: relative;
+  }
+  .section-label {
+    text-align: center; font-family: sans-serif; font-size: 0.7rem;
+    letter-spacing: 0.5em; text-transform: uppercase; color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    text-align: center; font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 400; letter-spacing: -0.02em; margin-bottom: 4rem; color: var(--white);
+  }
+  .features-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;
+  }
+  .feature-card {
+    background: var(--black-3); border: 1px solid var(--border);
+    padding: 2.5rem 2rem; text-align: center; transition: all 0.4s;
+    position: relative; overflow: hidden;
+  }
+  .feature-card::before {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0); transition: transform 0.4s;
+  }
+  .feature-card:hover::before { transform: scaleX(1); }
+  .feature-card:hover {
+    border-color: rgba(201,168,76,0.5);
+    box-shadow: 0 0 40px rgba(201,168,76,0.1);
+    transform: translateY(-4px);
+  }
+  .feature-icon {
+    width: 56px; height: 56px; margin: 0 auto 1.5rem;
+    background: rgba(201,168,76,0.1); border: 1px solid var(--border);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  }
+  .feature-icon svg { width: 24px; height: 24px; stroke: var(--gold); fill: none; }
+  .feature-card h3 {
+    font-family: sans-serif; font-size: 0.85rem; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem;
+  }
+  .feature-card p {
+    font-family: sans-serif; font-size: 0.9rem; color: var(--white-mid); line-height: 1.6;
+  }
+
+  /* GALLERY */
+  .gallery {
+    padding: 6rem 2rem;
+    background: var(--black);
+    max-width: 1200px; margin: 0 auto;
+  }
+  .gallery-layout {
+    display: grid; grid-template-columns: 1fr 300px; gap: 2rem; align-items: start;
+  }
+  .gallery-main {
+    background: var(--black-3); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    padding: 4rem; position: relative; overflow: hidden;
+    min-height: 420px;
+  }
+  .gallery-main-glow {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    width: 300px; height: 300px;
+    background: radial-gradient(ellipse, rgba(201,168,76,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .gallery-main svg { position: relative; z-index: 1; width: 100%; max-width: 340px; filter: drop-shadow(0 0 30px rgba(201,168,76,0.25)); transition: transform 0.5s; }
+  .gallery-main:hover svg { transform: scale(1.04) rotate(1deg); }
+
+  .gallery-thumbs { display: flex; flex-direction: column; gap: 1rem; }
+  .thumb {
+    background: var(--black-3); border: 1px solid var(--border);
+    padding: 1.5rem; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.3s; min-height: 120px;
+  }
+  .thumb:hover, .thumb.active {
+    border-color: var(--gold); box-shadow: 0 0 20px rgba(201,168,76,0.15);
+  }
+  .thumb svg { width: 70px; opacity: 0.7; transition: opacity 0.3s; }
+  .thumb:hover svg, .thumb.active svg { opacity: 1; }
+
+  /* REVIEWS */
+  .reviews {
+    padding: 6rem 2rem;
+    background: var(--black-2);
+  }
+  .reviews-grid {
+    max-width: 1100px; margin: 3rem auto 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;
+  }
+  .review-card {
+    background: var(--black); border: 1px solid var(--border);
+    padding: 2rem; transition: all 0.3s;
+  }
+  .review-card:hover { border-color: rgba(201,168,76,0.5); transform: translateY(-3px); }
+  .stars { display: flex; gap: 4px; margin-bottom: 1rem; }
+  .star { color: var(--gold); font-size: 1rem; }
+  .review-text {
+    font-size: 0.95rem; line-height: 1.7; color: var(--white-mid);
+    font-style: italic; margin-bottom: 1.5rem; font-family: sans-serif;
+  }
+  .reviewer { display: flex; align-items: center; gap: 0.75rem; }
+  .reviewer-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-family: sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--black);
+  }
+  .reviewer-name {
+    font-family: sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--white);
+  }
+  .reviewer-role { font-family: sans-serif; font-size: 0.75rem; color: var(--white-mid); }
+
+  /* PRICING */
+  .pricing {
+    padding: 6rem 2rem;
+    background: var(--black);
+    text-align: center;
+  }
+  .pricing-card {
+    max-width: 600px; margin: 3rem auto 0;
+    background: var(--black-3); border: 1px solid var(--gold);
+    padding: 3.5rem; position: relative; overflow: hidden;
+    box-shadow: 0 0 60px rgba(201,168,76,0.12);
+  }
+  .pricing-badge {
+    display: inline-block; background: var(--gold); color: var(--black);
+    font-family: sans-serif; font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    padding: 0.4rem 1.2rem; margin-bottom: 2rem;
+  }
+  .pricing-model {
+    font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--white-mid); margin-bottom: 0.5rem;
+  }
+  .pricing-name { font-size: 2rem; color: var(--white); margin-bottom: 2rem; }
+  .price-wrap { display: flex; align-items: baseline; justify-content: center; gap: 1rem; margin-bottom: 0.75rem; }
+  .price-old {
+    font-family: sans-serif; font-size: 1.4rem; color: rgba(255,255,255,0.3);
+    text-decoration: line-through;
+  }
+  .price-new {
+    font-family: sans-serif; font-size: 3.5rem; font-weight: 700; color: var(--gold);
+    letter-spacing: -0.03em;
+  }
+  .price-note { font-family: sans-serif; font-size: 0.8rem; color: var(--white-mid); margin-bottom: 2.5rem; }
+  .pricing-divider { width: 60px; height: 1px; background: var(--gold); margin: 2rem auto; opacity: 0.4; }
+  .pricing-perks { list-style: none; margin-bottom: 2.5rem; }
+  .pricing-perks li {
+    font-family: sans-serif; font-size: 0.9rem; color: var(--white-mid);
+    padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .pricing-perks li::before {
+    content: ''; display: block; width: 16px; height: 16px; min-width: 16px;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 8l3.5 3.5 6.5-7' stroke='%23C9A84C' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+  }
+  .countdown {
+    font-family: sans-serif; font-size: 0.8rem; color: var(--white-mid); margin-bottom: 1.5rem;
+  }
+  .countdown span { color: var(--gold); font-weight: 700; font-size: 1rem; margin: 0 2px; }
+
+  /* FOOTER */
+  footer {
+    background: var(--black-2); border-top: 1px solid var(--border);
+    padding: 4rem 2rem 2rem;
+  }
+  .footer-grid {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 3rem;
+    margin-bottom: 3rem;
+  }
+  .footer-brand-name { font-size: 1.5rem; color: var(--gold); letter-spacing: 0.3em; font-weight: 700; font-family: sans-serif; margin-bottom: 1rem; }
+  .footer-brand-desc { font-family: sans-serif; font-size: 0.85rem; color: var(--white-mid); line-height: 1.7; }
+  .footer-col h4 {
+    font-family: sans-serif; font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.25rem;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 0.6rem; }
+  .footer-col a {
+    font-family: sans-serif; font-size: 0.85rem; color: var(--white-mid); text-decoration: none; transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom {
+    max-width: 1100px; margin: 0 auto;
+    border-top: 1px solid var(--border); padding-top: 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: sans-serif; font-size: 0.8rem; color: rgba(255,255,255,0.25);
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  /* SCROLL ANIMATIONS */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s, transform 0.7s; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    .gallery-layout { grid-template-columns: 1fr; }
+    .gallery-thumbs { flex-direction: row; }
+    .thumb { min-height: 80px; padding: 1rem; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .pricing-card { padding: 2.5rem 1.5rem; }
+  }
+  @media (max-width: 480px) {
+    .footer-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Marshall</div>
+  <ul class="nav-links">
+    <li><a href="#features">Звук</a></li>
+    <li><a href="#gallery">Дизайн</a></li>
+    <li><a href="#reviews">Отзывы</a></li>
+    <li><a href="#pricing">Купить</a></li>
+  </ul>
+  <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Купить</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow">Премиальный звук · С 1962 года</div>
+  <h1>Marshall —<br><em>легендарный</em><br>звук</h1>
+  <p class="hero-sub">Мощный бас, кристально чистые высокие частоты и непревзойдённый премиальный дизайн, вдохновлённый легендарными усилителями.</p>
+  <div class="hero-cta">
+    <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Купить сейчас</button>
+    <button class="btn-secondary" onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">Узнать больше</button>
+  </div>
+  <div class="hero-product">
+    <div class="product-glow"></div>
+    <svg class="headphone-svg" viewBox="0 0 500 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 100 240 C 100 120 160 60 250 60 C 340 60 400 120 400 240" stroke="#C9A84C" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <path d="M 140 210 C 140 120 180 75 250 75 C 320 75 360 120 360 210" stroke="#8B6914" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="3 6"/>
+      <rect x="55" y="220" width="90" height="110" rx="22" fill="#1A1A1A" stroke="#C9A84C" stroke-width="2"/>
+      <rect x="68" y="235" width="64" height="80" rx="16" fill="#111" stroke="#8B6914" stroke-width="1"/>
+      <circle cx="100" cy="275" r="22" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.6"/>
+      <circle cx="100" cy="275" r="12" fill="#C9A84C" opacity="0.15"/>
+      <rect x="355" y="220" width="90" height="110" rx="22" fill="#1A1A1A" stroke="#C9A84C" stroke-width="2"/>
+      <rect x="368" y="235" width="64" height="80" rx="16" fill="#111" stroke="#8B6914" stroke-width="1"/>
+      <circle cx="400" cy="275" r="22" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.6"/>
+      <circle cx="400" cy="275" r="12" fill="#C9A84C" opacity="0.15"/>
+      <rect x="88" y="200" width="24" height="30" rx="4" fill="#222" stroke="#C9A84C" stroke-width="1"/>
+      <rect x="388" y="200" width="24" height="30" rx="4" fill="#222" stroke="#C9A84C" stroke-width="1"/>
+      <text x="250" y="290" text-anchor="middle" font-family="Georgia, serif" font-size="13" fill="#C9A84C" letter-spacing="6" font-weight="bold">MARSHALL</text>
+      <line x1="68" y1="255" x2="132" y2="255" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+      <line x1="68" y1="295" x2="132" y2="295" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+      <line x1="368" y1="255" x2="432" y2="255" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+      <line x1="368" y1="295" x2="432" y2="295" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+      <circle cx="380" cy="248" r="7" fill="#C9A84C" opacity="0.8"/>
+      <circle cx="380" cy="248" r="4" fill="#111"/>
+    </svg>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <p class="section-label reveal">Технологии</p>
+  <h2 class="section-title reveal">Создан для совершенства</h2>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M9 19V5l12-2v14M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-2c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>Мощный бас</h3>
+      <p>40-мм динамики с усиленной низкочастотной диафрагмой передают каждый удар с кинематической глубиной</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>До 80 часов</h3>
+      <p>Встроенный аккумулятор обеспечивает непрерывное воспроизведение на протяжении трёх полных дней без подзарядки</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>Bluetooth 5.0</h3>
+      <p>Стабильное соединение до 10 метров с мгновенным подключением и поддержкой нескольких устройств одновременно</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M18.364 5.636a9 9 0 010 12.728M15.536 8.464a5 5 0 010 7.072M6.343 6.343a9 9 0 000 12.728" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="2" stroke-width="1.5"/></svg>
+      </div>
+      <h3>Шумоподавление</h3>
+      <p>Гибридная система активного шумоподавления ANC устраняет внешние звуки на 98%, погружая вас в музыку</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">
+        <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="11" r="9" stroke-width="1.5"/></svg>
+      </div>
+      <h3>Быстрая зарядка</h3>
+      <p>15 минут зарядки обеспечивают 3 часа прослушивания. Полный заряд — всего за 2 часа через USB-C</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section style="padding: 6rem 2rem; background: var(--black);" id="gallery">
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <p class="section-label reveal">Галерея</p>
+    <h2 class="section-title reveal">Икона дизайна</h2>
+    <div class="gallery-layout reveal">
+      <div class="gallery-main" id="galleryMain">
+        <div class="gallery-main-glow"></div>
+        <svg id="mainSvg" viewBox="0 0 500 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 100 240 C 100 120 160 60 250 60 C 340 60 400 120 400 240" stroke="#C9A84C" stroke-width="14" fill="none" stroke-linecap="round"/>
+          <path d="M 140 210 C 140 120 180 75 250 75 C 320 75 360 120 360 210" stroke="#8B6914" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="3 6"/>
+          <rect x="55" y="220" width="90" height="110" rx="22" fill="#1A1A1A" stroke="#C9A84C" stroke-width="2"/>
+          <rect x="68" y="235" width="64" height="80" rx="16" fill="#111" stroke="#8B6914" stroke-width="1"/>
+          <circle cx="100" cy="275" r="22" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="100" cy="275" r="12" fill="#C9A84C" opacity="0.15"/>
+          <rect x="355" y="220" width="90" height="110" rx="22" fill="#1A1A1A" stroke="#C9A84C" stroke-width="2"/>
+          <rect x="368" y="235" width="64" height="80" rx="16" fill="#111" stroke="#8B6914" stroke-width="1"/>
+          <circle cx="400" cy="275" r="22" fill="none" stroke="#C9A84C" stroke-width="1.5" opacity="0.6"/>
+          <circle cx="400" cy="275" r="12" fill="#C9A84C" opacity="0.15"/>
+          <rect x="88" y="200" width="24" height="30" rx="4" fill="#222" stroke="#C9A84C" stroke-width="1"/>
+          <rect x="388" y="200" width="24" height="30" rx="4" fill="#222" stroke="#C9A84C" stroke-width="1"/>
+          <text x="250" y="290" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="#C9A84C" letter-spacing="6">MARSHALL</text>
+          <line x1="68" y1="255" x2="132" y2="255" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+          <line x1="68" y1="295" x2="132" y2="295" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+          <line x1="368" y1="255" x2="432" y2="255" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+          <line x1="368" y1="295" x2="432" y2="295" stroke="#C9A84C" stroke-width="0.8" opacity="0.4"/>
+          <circle cx="380" cy="248" r="7" fill="#C9A84C" opacity="0.8"/>
+          <circle cx="380" cy="248" r="4" fill="#111"/>
+        </svg>
+      </div>
+      <div class="gallery-thumbs">
+        <div class="thumb active" onclick="selectThumb(this,0)">
+          <svg viewBox="0 0 120 90" fill="none"><path d="M25 60C25 30 38 18 60 18C82 18 95 30 95 60" stroke="#C9A84C" stroke-width="4"/><rect x="12" y="55" width="26" height="30" rx="6" fill="#1A1A1A" stroke="#C9A84C" stroke-width="1.5"/><rect x="82" y="55" width="26" height="30" rx="6" fill="#1A1A1A" stroke="#C9A84C" stroke-width="1.5"/></svg>
+        </div>
+        <div class="thumb" onclick="selectThumb(this,1)">
+          <svg viewBox="0 0 120 90" fill="none"><ellipse cx="60" cy="45" rx="38" ry="38" fill="#1A1A1A" stroke="#C9A84C" stroke-width="2"/><circle cx="60" cy="45" r="24" fill="none" stroke="#C9A84C" stroke-width="1" opacity="0.5"/><circle cx="60" cy="45" r="10" fill="#C9A84C" opacity="0.2"/><text x="60" y="79" text-anchor="middle" font-family="Georgia,serif" font-size="6" fill="#C9A84C" letter-spacing="2">MARSHALL</text></svg>
+        </div>
+        <div class="thumb" onclick="selectThumb(this,2)">
+          <svg viewBox="0 0 120 90" fill="none"><rect x="20" y="20" width="80" height="50" rx="10" fill="#1A1A1A" stroke="#C9A84C" stroke-width="1.5"/><rect x="30" y="30" width="60" height="30" rx="6" fill="#111" stroke="#8B6914" stroke-width="1"/><circle cx="45" cy="45" r="8" fill="none" stroke="#C9A84C" stroke-width="1"/><circle cx="75" cy="45" r="8" fill="none" stroke="#C9A84C" stroke-width="1"/><line x1="30" y1="38" x2="90" y2="38" stroke="#C9A84C" stroke-width="0.5" opacity="0.3"/><line x1="30" y1="52" x2="90" y2="52" stroke="#C9A84C" stroke-width="0.5" opacity="0.3"/></svg>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 2rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem;" class="reveal">
+      <div style="background: var(--black-3); border: 1px solid var(--border); padding: 1.5rem; text-align: center;">
+        <div style="font-size: 2rem; font-weight: 300; color: var(--gold); font-family: sans-serif;">40mm</div>
+        <div style="font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white-mid); margin-top: 0.25rem;">Драйверы</div>
+      </div>
+      <div style="background: var(--black-3); border: 1px solid var(--border); padding: 1.5rem; text-align: center;">
+        <div style="font-size: 2rem; font-weight: 300; color: var(--gold); font-family: sans-serif;">280g</div>
+        <div style="font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white-mid); margin-top: 0.25rem;">Вес</div>
+      </div>
+      <div style="background: var(--black-3); border: 1px solid var(--border); padding: 1.5rem; text-align: center;">
+        <div style="font-size: 2rem; font-weight: 300; color: var(--gold); font-family: sans-serif;">Hi-Res</div>
+        <div style="font-family: sans-serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--white-mid); margin-top: 0.25rem;">Аудио</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews" id="reviews">
+  <p class="section-label reveal">Отзывы</p>
+  <h2 class="section-title reveal">Доверяют меломаны</h2>
+  <div class="reviews-grid">
+    <div class="review-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">«Это лучшие наушники, которые я когда-либо надевал. Бас физически ощущается, но при этом не жертвует детализацией высоких частот. Абсолютно поражён.»</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">АС</div>
+        <div>
+          <div class="reviewer-name">Алексей Соколов</div>
+          <div class="reviewer-role">Звукорежиссёр, Москва</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">«Использую для работы дома и в поездках. Шумоподавление настолько эффективное, что я забываю о шуме самолёта. Дизайн вызывает восхищение всех вокруг.»</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">МВ</div>
+        <div>
+          <div class="reviewer-name">Мария Волкова</div>
+          <div class="reviewer-role">Архитектор, Санкт-Петербург</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">«80 часов — это не маркетинг. Я зарядил их в понедельник и снова подключил кабель лишь в четверг следующей недели. Невероятное время работы.»</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">ДК</div>
+        <div>
+          <div class="reviewer-name">Дмитрий Куликов</div>
+          <div class="reviewer-role">Программист, Екатеринбург</div>
+        </div>
+      </div>
+    </div>
+    <div class="review-card reveal">
+      <div class="stars">★★★★★</div>
+      <p class="review-text">«У меня было много дорогих наушников. Marshall — единственные, которые передают атмосферу живого концерта. Кожаные амбушюры невероятно мягкие.»</p>
+      <div class="reviewer">
+        <div class="reviewer-avatar">НП</div>
+        <div>
+          <div class="reviewer-name">Наталья Попова</div>
+          <div class="reviewer-role">Музыкант, Казань</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <p class="section-label reveal">Специальное предложение</p>
+  <h2 class="section-title reveal">Инвестиция в звук</h2>
+  <div class="pricing-card reveal">
+    <div class="pricing-badge">Скидка 30% · Ограниченное время</div>
+    <p class="pricing-model">Marshall Monitor III ANC</p>
+    <p class="pricing-name">Premium Edition</p>
+    <div class="price-wrap">
+      <span class="price-old">42 990 ₽</span>
+      <span class="price-new">29 990 ₽</span>
+    </div>
+    <p class="price-note">Экономия 13 000 ₽ · Бесплатная доставка</p>
+    <div class="pricing-divider"></div>
+    <ul class="pricing-perks">
+      <li>Фирменный чехол из натуральной кожи в комплекте</li>
+      <li>Кабель 3.5mm для проводного подключения</li>
+      <li>Адаптер для авиа-разъёма</li>
+      <li>Гарантия 2 года от производителя</li>
+      <li>Бесплатный возврат в течение 30 дней</li>
+    </ul>
+    <p class="countdown">Предложение действует: <span id="h">11</span>ч <span id="m">47</span>м <span id="s">23</span>с</p>
+    <button class="btn-primary" style="width: 100%; padding: 1.2rem; font-size: 0.9rem;">Купить сейчас — 29 990 ₽</button>
+    <p style="margin-top: 1rem; font-family: sans-serif; font-size: 0.78rem; color: rgba(255,255,255,0.3);">Безопасная оплата · Доставка 1–3 дня · Официальный реселлер</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand-name">Marshall</div>
+      <p class="footer-brand-desc">Более 60 лет мы создаём оборудование, которое определяет звук легендарных рок-концертов и студийных записей по всему миру.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Контакты</h4>
+      <ul>
+        <li><a href="#">+7 (800) 555-03-00</a></li>
+        <li><a href="#">info@marshall-store.ru</a></li>
+        <li><a href="#">Поддержка 24/7</a></li>
+        <li><a href="#">Чат на сайте</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Доставка</h4>
+      <ul>
+        <li><a href="#">Курьер 1–3 дня</a></li>
+        <li><a href="#">СДЭК по России</a></li>
+        <li><a href="#">Самовывоз</a></li>
+        <li><a href="#">Международная</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Гарантия</h4>
+      <ul>
+        <li><a href="#">2 года официальная</a></li>
+        <li><a href="#">Возврат 30 дней</a></li>
+        <li><a href="#">Сервисные центры</a></li>
+        <li><a href="#">Регистрация</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Marshall. Все права защищены.</span>
+    <span>Политика конфиденциальности · Оферта</span>
+  </div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => obs.observe(r));
+
+  function selectThumb(el, idx) {
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  let total = 11*3600 + 47*60 + 23;
+  const hEl = document.getElementById('h');
+  const mEl = document.getElementById('m');
+  const sEl = document.getElementById('s');
+  setInterval(() => {
+    if (total <= 0) total = 86400;
+    total--;
+    hEl.textContent = String(Math.floor(total/3600)).padStart(2,'0');
+    mEl.textContent = String(Math.floor((total%3600)/60)).padStart(2,'0');
+    sEl.textContent = String(total%60).padStart(2,'0');
+  }, 1000);
+</script>
+</body>
+</html>
